@@ -1,1 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Психосоматика эмоций | Пошаговый тест</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            background: linear-gradient(135deg, #d4e8d4 0%, #b8d9b0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Inter', system-ui, sans-serif;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 650px;
+            width: 100%;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 5px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: #2d5a2c;
+            padding: 20px 28px;
+            color: white;
+        }
+
+        .test-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .test-title span {
+            background: #6fbf4c;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            background: #4a7c48;
+            border-radius: 30px;
+            height: 10px;
+            margin-top: 18px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #6fbf4c;
+            height: 100%;
+            width: 0%;
+            border-radius: 30px;
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            font-size: 0.85rem;
+            margin-top: 12px;
+            opacity: 0.9;
+            text-align: right;
+        }
+
+        .question-area {
+            padding: 32px 28px;
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #1a4a1a;
+            line-height: 1.3;
+            margin-bottom: 28px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .option-btn {
+            background: #f0f9ec;
+            border: 2px solid #bddbaf;
+            border-radius: 60px;
+            padding: 16px 22px;
+            font-size: 1.05rem;
+            text-align: left;
+            font-weight: 500;
+            color: #2d5a2c;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .option-btn:hover {
+            background: #e2f3db;
+            border-color: #8fc47c;
+            transform: translateX(4px);
+        }
+
+        .option-prefix {
+            background: #cce5c2;
+            width: 32px;
+            height: 32px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2d5a2c;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            background: #eef7ea;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #2d5a2c;
+            transition: 0.2s;
+        }
+
+        .nav-btn-primary {
+            background: #2d5a2c;
+            color: white;
+        }
+
+        .nav-btn-primary:hover {
+            background: #1f421e;
+        }
+
+        .result-area {
+            padding: 32px 28px;
+            background: linear-gradient(145deg, #f0f9ec, #ffffff);
+            border-top: 1px solid #cde0ef;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .risk-low {
+            background: #2c7a4a;
+            color: white;
+            box-shadow: 0 4px 12px rgba(44, 122, 74, 0.3);
+        }
+        .risk-mid {
+            background: #d98c2b;
+            color: white;
+        }
+        .risk-high {
+            background: #bc4742;
+            color: white;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            line-height: 1.55;
+            color: #1f3e1f;
+            margin-bottom: 25px;
+        }
+        
+        .result-text ul {
+            margin: 12px 0 12px 25px;
+            padding-left: 0;
+        }
+        
+        .result-text li {
+            margin-bottom: 8px;
+        }
+
+        .restart-btn {
+            background: #2d5a2c;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .restart-btn:hover {
+            background: #1f421e;
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #6f8f6a;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #d4e2d0;
+        }
+
+        footer {
+            background: #f8faf8;
+            padding: 12px 28px;
+            font-size: 0.7rem;
+            color: #6f8f6a;
+            text-align: center;
+            border-top: 1px solid #e2ede0;
+        }
+
+        @media (max-width: 550px) {
+            .question-text {
+                font-size: 1.3rem;
+            }
+            .option-btn {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            .test-container {
+                border-radius: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="test-container" id="app">
+    <div v-if="!finished">
+        <div class="test-header">
+            <div class="test-title">
+                Психосоматика эмоций
+                <span>проект 10 класс</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" :style="{width: progressPercent+'%'}"></div>
+            </div>
+            <div class="question-counter">Вопрос {{ currentIndex+1 }} из {{ totalQuestions }}</div>
+        </div>
+        <div class="question-area">
+            <div class="question-text">{{ currentQuestion.text }}</div>
+            <div class="options-list">
+                <button v-for="(opt, idx) in currentQuestion.options" :key="idx" 
+                        class="option-btn" @click="selectAnswer(opt.score)">
+                    <span class="option-prefix">{{ String.fromCharCode(65+idx) }}</span>
+                    {{ opt.label }}
+                </button>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" @click="prevQuestion" :disabled="currentIndex === 0">Назад</button>
+                <button class="nav-btn nav-btn-primary" @click="nextQuestion" v-if="!isLast">Далее</button>
+                <button class="nav-btn nav-btn-primary" @click="finishTest" v-if="isLast">Узнать результат</button>
+            </div>
+        </div>
+    </div>
+
+    <div v-else class="result-area">
+        <div :class="['risk-badge', riskClass]">{{ riskLevel }}</div>
+        <div class="result-text" v-html="resultMessage"></div>
+        <button class="restart-btn" @click="restartTest">Пройти тест заново</button>
+        <div class="disclaimer">
+            Представленная модель даёт обобщённую картину типичных реакций. Индивидуальные ощущения могут отличаться. При хронических эмоциональных состояниях и связанных с ними телесных симптомах необходимо обратиться к врачу для диагностики и подбора терапии. Данная информация не заменяет медицинскую консультацию.
+        </div>
+        <footer>
+            Модель «Эмоция — телесная реакция — риск» | Исследовательский проект
+        </footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+    const QUESTIONS = [
+        { text: "Как часто вы испытываете ГНЕВ (злость, раздражение, ярость)?",
+          options: [
+              { label: "Никогда или почти никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Постоянно / очень часто", score: 4 }
+          ]},
+        { text: "Когда вы злитесь или испытываете гнев, замечаете ли вы учащённое сердцебиение, напряжение в челюсти или шее?",
+          options: [
+              { label: "Нет, таких ощущений не бывает", score: 0 },
+              { label: "Редко, почти незаметно", score: 1 },
+              { label: "Иногда бывает", score: 2 },
+              { label: "Часто сопровождает гнев", score: 3 },
+              { label: "Почти всегда", score: 4 }
+          ]},
+        { text: "Как часто вы испытываете ТРЕВОГУ (беспокойство, страх, волнение)?",
+          options: [
+              { label: "Никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Постоянно живу с тревогой", score: 4 }
+          ]},
+        { text: "Бывают ли у вас телесные проявления тревоги: дрожь, потливость, ком в горле, «бабочки» в животе?",
+          options: [
+              { label: "Нет, никогда", score: 0 },
+              { label: "Очень редко", score: 1 },
+              { label: "Иногда, в стрессовых ситуациях", score: 2 },
+              { label: "Часто, при любом волнении", score: 3 },
+              { label: "Почти всегда, даже без явной причины", score: 4 }
+          ]},
+        { text: "Как часто вы испытываете ОБИДУ (чувство подавленности, досады, разочарования)?",
+          options: [
+              { label: "Никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Постоянно коплю обиды", score: 4 }
+          ]},
+        { text: "Сопровождается ли обида тяжестью в груди, чувством «камня на душе» или слезоточивостью?",
+          options: [
+              { label: "Нет", score: 0 },
+              { label: "Очень редко", score: 1 },
+              { label: "Иногда", score: 2 },
+              { label: "Часто бывает", score: 3 },
+              { label: "Почти всегда", score: 4 }
+          ]},
+        { text: "Как часто вы чувствуете ВИНУ или СТЫД (желание «сжаться», покраснение, жар)?",
+          options: [
+              { label: "Никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Постоянно испытываю чувство вины", score: 4 }
+          ]},
+        { text: "Беспомощность, отчаяние, апатия — насколько часто вы оказываетесь в таком состоянии?",
+          options: [
+              { label: "Никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда бывает", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Очень часто / постоянно", score: 4 }
+          ]},
+        { text: "Замечали ли вы слабость, нехватку энергии, частые простуды на фоне эмоционального напряжения?",
+          options: [
+              { label: "Нет, я энергичен", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда, после стресса", score: 2 },
+              { label: "Часто болею или чувствую упадок сил", score: 3 },
+              { label: "Это моё постоянное состояние", score: 4 }
+          ]},
+        { text: "Часто ли вы испытываете ПЕРЕУТОМЛЕНИЕ, выгорание, головные боли, скованность мышц?",
+          options: [
+              { label: "Никогда", score: 0 },
+              { label: "Редко", score: 1 },
+              { label: "Иногда, после нагрузок", score: 2 },
+              { label: "Часто", score: 3 },
+              { label: "Постоянно чувствую усталость и напряжение", score: 4 }
+          ]}
+    ];
+
+    new Vue({
+        el: '#app',
+        data: {
+            questions: QUESTIONS,
+            currentIndex: 0,
+            answers: [],
+            finished: false
+        },
+        computed: {
+            totalQuestions() {
+                return this.questions.length;
+            },
+            currentQuestion() {
+                return this.questions[this.currentIndex];
+            },
+            isLast() {
+                return this.currentIndex === this.totalQuestions - 1;
+            },
+            progressPercent() {
+                return ((this.currentIndex + 1) / this.totalQuestions) * 100;
+            },
+            totalScore() {
+                if (this.answers.length === 0) return 0;
+                return this.answers.reduce((sum, val) => sum + val, 0);
+            },
+            riskLevel() {
+                let score = this.totalScore;
+                if (score <= 9) return "НИЗКИЙ РИСК";
+                if (score <= 19) return "УМЕРЕННЫЙ РИСК";
+                return "ВЫСОКИЙ РИСК";
+            },
+            riskClass() {
+                let level = this.riskLevel;
+                if (level === "НИЗКИЙ РИСК") return "risk-low";
+                if (level === "УМЕРЕННЫЙ РИСК") return "risk-mid";
+                return "risk-high";
+            },
+            resultMessage() {
+                let score = this.totalScore;
+                let maxPossible = this.totalQuestions * 4;
+                let percent = Math.round((score / maxPossible) * 100);
+                
+                if (this.riskLevel === "НИЗКИЙ РИСК") {
+                    return `<strong>Ваш суммарный балл: ${score} из ${maxPossible} (${percent}%)</strong><br><br>
+                    Вы редко испытываете интенсивные отрицательные эмоции, и они не вызывают заметных телесных реакций. 
+                    Поддерживайте здоровый образ жизни, занимайтесь любимым делом — это лучшая профилактика стресса.<br><br>
+                    <strong>Рекомендация:</strong> сохраняйте режим сна, физическую активность, чтобы поддерживать эмоциональный баланс.`;
+                } 
+                else if (this.riskLevel === "УМЕРЕННЫЙ РИСК") {
+                    return `<strong>Ваш суммарный балл: ${score} из ${maxPossible} (${percent}%)</strong><br><br>
+                    Иногда вы чувствуете гнев, тревогу или обиду, и это сопровождается телесными сигналами (сердцебиение, напряжение, усталость). 
+                    Такие реакции — повод обратить внимание на психоэмоциональную сферу.<br><br>
+                    <strong>Рекомендации:</strong>
+                    <ul>
+                        <li>попробуйте техники релаксации (дыхание 4-7-8, прогулки на свежем воздухе);</li>
+                        <li>ведите дневник эмоций;</li>
+                        <li>если симптомы повторяются — проконсультируйтесь со школьным психологом.</li>
+                    </ul>`;
+                } 
+                else {
+                    return `<strong>Ваш суммарный балл: ${score} из ${maxPossible} (${percent}%)</strong><br><br>
+                    Вы часто испытываете сильные эмоции (гнев, тревогу, обиду, вину или переутомление), и они сопровождаются устойчивыми телесными ощущениями:
+                    учащённое сердцебиение, напряжение, ком в горле, слабость, головные боли. Это повышает нагрузку на сердечно-сосудистую систему, 
+                    вегетативную нервную систему, ЖКТ и иммунитет.<br><br>
+                    <strong>Рекомендации (по модели рисков):</strong>
+                    <ul>
+                        <li>освойте дыхательные практики (например, дыхание 4-7-8 — вдох 4 сек, задержка 7, выдох 8);</li>
+                        <li>включите умеренную физическую активность (ходьба, йога, плавание);</li>
+                        <li>обсудите своё состояние с психологом и терапевтом для комплексной оценки;</li>
+                        <li>помните: длительный стресс может приводить к гипертонии, синдрому раздражённого кишечника, снижению иммунитета и хронической усталости.</li>
+                    </ul>`;
+                }
+            }
+        },
+        methods: {
+            selectAnswer(score) {
+                this.$set(this.answers, this.currentIndex, score);
+                if (!this.isLast) {
+                    this.nextQuestion();
+                }
+            },
+            nextQuestion() {
+                if (this.currentIndex < this.totalQuestions - 1) {
+                    this.currentIndex++;
+                }
+            },
+            prevQuestion() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                }
+            },
+            finishTest() {
+                if (this.answers.length < this.totalQuestions) {
+                    alert("Пожалуйста, ответьте на все вопросы, прежде чем увидеть результат.");
+                    return;
+                }
+                this.finished = true;
+            },
+            restartTest() {
+                this.answers = [];
+                this.currentIndex = 0;
+                this.finished = false;
+            }
+        },
+        mounted() {
+            for(let i=0; i<this.totalQuestions; i++) {
+                this.answers[i] = null;
+            }
+        }
+    });
+</script>
+</body>
+</html>
