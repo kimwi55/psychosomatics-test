@@ -118,6 +118,18 @@
             transform: translateX(4px);
         }
 
+        /* Стиль для ВЫБРАННОГО варианта — темнее на пару оттенков */
+        .option-btn.selected {
+            background: #5a9e4b;
+            border-color: #2d5a2c;
+            color: white;
+        }
+
+        .option-btn.selected .option-prefix {
+            background: #2d5a2c;
+            color: white;
+        }
+
         .option-prefix {
             background: #cce5c2;
             width: 32px;
@@ -269,7 +281,8 @@
             <div class="question-text">{{ currentQuestion.text }}</div>
             <div class="options-list">
                 <button v-for="(opt, idx) in currentQuestion.options" :key="idx" 
-                        class="option-btn" @click="selectAnswer(opt.score)">
+                        :class="['option-btn', { 'selected': selectedScore === opt.score }]"
+                        @click="selectAnswer(opt.score)">
                     <span class="option-prefix">{{ String.fromCharCode(65+idx) }}</span>
                     {{ opt.label }}
                 </button>
@@ -403,7 +416,9 @@
             },
             totalScore() {
                 if (this.answers.length === 0) return 0;
-                return this.answers.reduce((sum, val) => sum + val, 0);
+                let validAnswers = this.answers.filter(v => v !== null && v !== undefined);
+                if (validAnswers.length === 0) return 0;
+                return validAnswers.reduce((sum, val) => sum + val, 0);
             },
             riskLevel() {
                 let score = this.totalScore;
@@ -452,16 +467,24 @@
                         <li>помните: длительный стресс может приводить к гипертонии, синдрому раздражённого кишечника, снижению иммунитета и хронической усталости.</li>
                     </ul>`;
                 }
+            },
+            // Текущий выбранный балл для подсветки на этом вопросе
+            selectedScore() {
+                return this.answers[this.currentIndex];
             }
         },
         methods: {
             selectAnswer(score) {
+                // Сохраняем ответ
                 this.$set(this.answers, this.currentIndex, score);
-                if (!this.isLast) {
-                    this.nextQuestion();
-                }
+                // Автоматический переход УБРАН — ничего не делаем, только сохраняем ответ
             },
             nextQuestion() {
+                // Проверяем, ответил ли пользователь на текущий вопрос
+                if (this.answers[this.currentIndex] === null || this.answers[this.currentIndex] === undefined) {
+                    alert("⚠️ Пожалуйста, выберите ответ на вопрос, чтобы продолжить.");
+                    return;
+                }
                 if (this.currentIndex < this.totalQuestions - 1) {
                     this.currentIndex++;
                 }
@@ -472,9 +495,18 @@
                 }
             },
             finishTest() {
-                if (this.answers.length < this.totalQuestions) {
-                    alert("Пожалуйста, ответьте на все вопросы, прежде чем увидеть результат.");
+                // Проверяем, ответил ли пользователь на ПОСЛЕДНИЙ вопрос
+                if (this.answers[this.currentIndex] === null || this.answers[this.currentIndex] === undefined) {
+                    alert("⚠️ Пожалуйста, выберите ответ на последний вопрос, чтобы увидеть результат.");
                     return;
+                }
+                // Проверяем, что все вопросы заполнены (на всякий случай)
+                for (let i = 0; i < this.totalQuestions; i++) {
+                    if (this.answers[i] === null || this.answers[i] === undefined) {
+                        alert(`⚠️ Вы пропустили вопрос №${i+1}. Пожалуйста, ответьте на все вопросы.`);
+                        this.currentIndex = i;
+                        return;
+                    }
                 }
                 this.finished = true;
             },
@@ -482,6 +514,9 @@
                 this.answers = [];
                 this.currentIndex = 0;
                 this.finished = false;
+                for(let i=0; i<this.totalQuestions; i++) {
+                    this.answers[i] = null;
+                }
             }
         },
         mounted() {
